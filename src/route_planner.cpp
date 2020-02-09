@@ -67,9 +67,9 @@ RouteModel::Node *RoutePlanner::NextNode() {
         //const RouteModel::Node* second;
         //bool sum =(first->g_value + first->h_value) > (second->g_value + second->h_value);
         
-        std::sort(this->open_list.begin(), this->open_list.end(), CompareForValueF);
-        RouteModel::Node* lowest_val_of_f = this->open_list.back();
-        this->open_list.pop_back();
+        std::sort(open_list.begin(), open_list.end(), CompareForValueF);
+        RouteModel::Node* lowest_val_of_f = open_list.back();
+        open_list.pop_back();
         return lowest_val_of_f;
 
 }
@@ -89,12 +89,18 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
     std::vector<RouteModel::Node> path_found;
 
     // TODO: Implement your solution here.
-
+   // for(auto nodes: path_found)
+    while(current_node->parent != nullptr)
+    {
+        path_found.push_back(*current_node);
+        distance += current_node->distance(*(current_node->parent)); 
+        //path_found.push_back(*current_node);
+        current_node = current_node->parent;
+    }
+    path_found.push_back(*current_node);
     distance *= m_Model.MetricScale(); // Multiply the distance by the scale of the map to get meters.
     return path_found;
-
 }
-
 
 // TODO 7: Write the A* Search algorithm here.
 // Tips:
@@ -104,8 +110,25 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
 // - Store the final path in the m_Model.path attribute before the method exits. This path will then be displayed on the map tile.
 
 void RoutePlanner::AStarSearch() {
+    start_node->visited = true;
+    open_list.push_back(start_node);
     RouteModel::Node *current_node = nullptr;
-
+    while(open_list.size() > 0)
+    {
+        current_node = NextNode();
+        if(current_node->distance(*end_node) == 0)
+        {
+            m_Model.path = ConstructFinalPath(current_node);
+            return;
+        }
+        else
+        {
+            {
+                AddNeighbors(current_node);
+            }
+        }
+        
+    }
     // TODO: Implement your solution here.
-
+    //RoutePlanner::AddNeighbors(current_node->neighbors);
 }
