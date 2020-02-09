@@ -62,11 +62,7 @@ bool CompareForValueF(const RouteModel::Node* first, const RouteModel::Node* sec
   
 }
 
-RouteModel::Node *RoutePlanner::NextNode() {
-        //const RouteModel::Node* first; 
-        //const RouteModel::Node* second;
-        //bool sum =(first->g_value + first->h_value) > (second->g_value + second->h_value);
-        
+RouteModel::Node *RoutePlanner::NextNode() { 
         std::sort(this->open_list.begin(), this->open_list.end(), CompareForValueF);
         RouteModel::Node* lowest_val_of_f = this->open_list.back();
         this->open_list.pop_back();
@@ -116,6 +112,7 @@ void RoutePlanner::AStarSearch() {
     start_node->visited = true;
     open_list.push_back(start_node);
     RouteModel::Node *current_node = nullptr;
+   // TODO: Implement your solution here.
     while(open_list.size() > 0)
     {
         current_node = NextNode();
@@ -130,6 +127,4 @@ void RoutePlanner::AStarSearch() {
         }
         
     }
-    // TODO: Implement your solution here.
-    //RoutePlanner::AddNeighbors(current_node->neighbors);
 }
